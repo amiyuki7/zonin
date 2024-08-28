@@ -11,4 +11,17 @@ ThemeData darkTheme(BuildContext context) => ThemeData.dark().copyWith(
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
       iconTheme: const IconThemeData(color: accentPurple),
+      navigationBarTheme: const NavigationBarThemeData().copyWith(
+        indicatorColor: Colors.transparent,
+        labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>(
+          (Set<MaterialState> states) => TextStyle(
+            color:
+                (states.contains(MaterialState.selected)) ? accentPurple2 : const Color(0xFF79747E),
+            fontWeight:
+                (states.contains(MaterialState.selected)) ? FontWeight.w900 : FontWeight.w600,
+            height: 0,
+            fontSize: 14,
+          ),
+        ),
+      ),
     );
