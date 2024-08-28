@@ -41,8 +41,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else if (state is Authenticated) {
-          print('Sign up successful');
-          print(state.user.toString());
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          Navigator.of(context).pop();
         }
       },
       child: Scaffold(
@@ -86,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 ZoninTextField(
                   controller: passwordController,
                   labelText: 'PASSWORD',
@@ -108,7 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 ZoninTextField(
                   controller: confirmController,
                   labelText: 'CONFIRM PASSWORD',
@@ -130,36 +130,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 Center(
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : TextButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              await context
-                                  .read<AuthCubit>()
-                                  .signUp(emailController.text, passwordController.text);
-                            }
-                          },
-                          style: ButtonStyle(
-                            minimumSize: MaterialStatePropertyAll<Size>(
-                                Size(MediaQuery.of(context).size.width * 0.8, 0)),
-                            backgroundColor: const MaterialStatePropertyAll<Color>(accentPurple),
-                            padding: const MaterialStatePropertyAll<EdgeInsets>(
-                                EdgeInsets.symmetric(vertical: 15)),
-                            splashFactory: InkSplash.splashFactory,
-                            overlayColor: const MaterialStatePropertyAll<Color>(accentPurple2),
-                          ),
-                          child: const Text(
-                            "SIGN UP",
-                            style: TextStyle(
-                              color: Color(0xFF21005D),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 53, minWidth: 53),
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                await context
+                                    .read<AuthCubit>()
+                                    .signUp(emailController.text, passwordController.text);
+                              }
+                            },
+                            style: ButtonStyle(
+                              minimumSize: MaterialStatePropertyAll<Size>(
+                                  Size(MediaQuery.of(context).size.width * 0.8, 0)),
+                              backgroundColor: const MaterialStatePropertyAll<Color>(accentPurple),
+                              padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                  EdgeInsets.symmetric(vertical: 15)),
+                              splashFactory: InkSplash.splashFactory,
+                              overlayColor: const MaterialStatePropertyAll<Color>(accentPurple2),
+                            ),
+                            child: const Text(
+                              "SIGN UP",
+                              style: TextStyle(
+                                color: Color(0xFF21005D),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
+                  ),
                 ),
                 const SizedBox(height: 100),
               ],
