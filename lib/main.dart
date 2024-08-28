@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:zonin/composition_root.dart';
 import 'package:zonin/screens/login_screen.dart';
 import 'package:zonin/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CompositionRoot.configure();
 
   runApp(const MyApp());
 }
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Zonin',
       debugShowCheckedModeBanner: false,
       theme: darkTheme(context),
-      home: LoginScreen(),
+      home: CompositionRoot.composeLoginUI(),
     );
   }
 }
