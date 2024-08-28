@@ -56,6 +56,7 @@ class _ZoninTextFieldState extends State<ZoninTextField> {
           borderSide: BorderSide(width: 3, color: accentPurple2),
         ),
         focusColor: focusText,
+        errorStyle: const TextStyle(height: 0),
       ),
     );
   }
