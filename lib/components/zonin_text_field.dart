@@ -7,6 +7,7 @@ class ZoninTextField extends StatefulWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final Widget? suffixIcon;
+  final String? Function(String?)? validator;
 
   const ZoninTextField({
     super.key,
@@ -15,6 +16,7 @@ class ZoninTextField extends StatefulWidget {
     required this.obscureText,
     required this.keyboardType,
     this.suffixIcon,
+    this.validator,
   });
 
   @override
@@ -41,6 +43,8 @@ class _ZoninTextFieldState extends State<ZoninTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       focusNode: _focusNode,
+      controller: widget.controller,
+      validator: widget.validator,
       cursorHeight: 15,
       obscureText: widget.obscureText,
       decoration: InputDecoration(

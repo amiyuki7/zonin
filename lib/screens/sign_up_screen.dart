@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zonin/colors.dart';
 import 'package:zonin/components/zonin_text_field.dart';
+import 'package:zonin/state/auth/auth_cubit.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,6 +21,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscureConfirm = true;
   IconData _obscureConfirmIcon = CupertinoIcons.eye;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthCubit>().stream.listen((state) {
+      if (state is Unauthenticated) {
+        final snackBar = SnackBar(
+          content: Text(
+            state.reason,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: darkBg2),
+          ),
+          backgroundColor: const Color(0xFFFF7477),
+        );
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   icon: Icon(_obscureConfirmIcon, size: 24),
                 ),
                 validator: (value) {
+                  if (value!.isEmpty) return 'Please fill in this field';
                   if (value != passwordController.text) return 'Passwords do not match!';
                   return null;
                 },
@@ -109,16 +130,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 40),
               Center(
                 child: TextButton(
-                  onPressed: () {
-                    print(_formKey.currentState!.validate());
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await context
+                          .read<AuthCubit>()
+                          .signUp(emailController.text, passwordController.text);
+                    }
                   },
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll<Color>(accentPurple),
-                    padding: MaterialStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.only(left: 135, right: 135, top: 15, bottom: 15),
-                    ),
+                  style: ButtonStyle(
+                    minimumSize: MaterialStatePropertyAll<Size>(
+                        Size(MediaQuery.of(context).size.width * 0.8, 0)),
+                    backgroundColor: const MaterialStatePropertyAll<Color>(accentPurple),
+                    padding: const MaterialStatePropertyAll<EdgeInsets>(
+                        EdgeInsets.symmetric(vertical: 15)),
                     splashFactory: InkSplash.splashFactory,
-                    overlayColor: MaterialStatePropertyAll<Color>(accentPurple2),
+                    overlayColor: const MaterialStatePropertyAll<Color>(accentPurple2),
                   ),
                   child: const Text(
                     "SIGN UP",
@@ -130,7 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              // Spacer(flex: 1),
+              const SizedBox(height: 100),
             ],
           ),
         ),

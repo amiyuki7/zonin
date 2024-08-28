@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zonin/colors.dart';
 import 'package:zonin/components/oauth_button.dart';
 import 'package:zonin/components/zonin_text_field.dart';
 import 'package:zonin/screens/sign_up_screen.dart';
+import 'package:zonin/state/auth/auth_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -85,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: accentPurple,
+                        fontSize: 16,
                       ),
                     )),
               ),
@@ -92,13 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {},
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>(accentPurple),
-                padding: MaterialStatePropertyAll<EdgeInsets>(
-                  EdgeInsets.only(left: 145, right: 145, top: 15, bottom: 15),
-                ),
+              style: ButtonStyle(
+                minimumSize: MaterialStatePropertyAll<Size>(
+                    Size(MediaQuery.of(context).size.width * 0.8, 0)),
+                backgroundColor: const MaterialStatePropertyAll<Color>(accentPurple),
+                padding:
+                    const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(vertical: 15)),
                 splashFactory: InkSplash.splashFactory,
-                overlayColor: MaterialStatePropertyAll<Color>(accentPurple2),
+                overlayColor: const MaterialStatePropertyAll<Color>(accentPurple2),
               ),
               child: const Text(
                 "SIGN IN",
@@ -143,8 +147,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => SignUpScreen()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider.value(
+                          value: BlocProvider.of<AuthCubit>(context),
+                          child: const SignUpScreen(),
+                        ),
+                      ),
+                    );
                   },
                   style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
                   child: const Text("Sign Up",
