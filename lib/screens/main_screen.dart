@@ -57,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         indicatorColor: Colors.transparent,
+        overlayColor: MaterialStatePropertyAll(Colors.transparent),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
