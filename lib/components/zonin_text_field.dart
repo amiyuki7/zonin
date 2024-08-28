@@ -64,4 +64,10 @@ class _ZoninTextFieldState extends State<ZoninTextField> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+  }
 }
