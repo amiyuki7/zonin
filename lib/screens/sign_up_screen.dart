@@ -20,144 +20,150 @@ class _SignUpScreenState extends State<SignUpScreen> {
   IconData _obscureIcon = CupertinoIcons.eye;
   bool _obscureConfirm = true;
   IconData _obscureConfirmIcon = CupertinoIcons.eye;
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
-  void initState() {
-    super.initState();
-    context.read<AuthCubit>().stream.listen((state) {
-      if (state is Unauthenticated) {
-        final snackBar = SnackBar(
-          content: Text(
-            state.reason,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: darkBg2),
-          ),
-          backgroundColor: const Color(0xFFFF7477),
-        );
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Sign Up',
-                style: TextStyle(
-                  fontSize: 35,
-                  color: accentPurple,
-                  fontFamily: 'Caros Soft',
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        setState(() {
+          _isLoading = state is Loading;
+        });
+        if (state is Unauthenticated) {
+          final snackBar = SnackBar(
+            content: Text(
+              state.reason,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: darkBg2),
+            ),
+            backgroundColor: const Color(0xFFFF7477),
+          );
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else if (state is Authenticated) {
+          print('Sign up successful');
+          print(state.user.toString());
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: accentPurple,
+                    fontFamily: 'Caros Soft',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Please enter your details',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 10),
+                const Text(
+                  'Please enter your details',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              ZoninTextField(
-                controller: emailController,
-                labelText: 'EMAIL',
-                obscureText: false,
-                keyboardType: TextInputType.emailAddress,
-                suffixIcon: const Icon(CupertinoIcons.mail_solid, size: 24),
-                validator: (value) {
-                  if (value!.isEmpty) return 'Please fill in this field';
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                    return 'Invalid email format';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ZoninTextField(
-                controller: passwordController,
-                labelText: 'PASSWORD',
-                obscureText: _obscurePassword,
-                keyboardType: TextInputType.emailAddress,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                      _obscureIcon =
-                          _obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash;
-                    });
-                  },
-                  icon: Icon(_obscureIcon, size: 24),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) return 'Please fill in this field';
-                  if (value.length < 8) return 'Password must be at least 8 characters long';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ZoninTextField(
-                controller: confirmController,
-                labelText: 'CONFIRM PASSWORD',
-                obscureText: _obscureConfirm,
-                keyboardType: TextInputType.emailAddress,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _obscureConfirm = !_obscureConfirm;
-                      _obscureConfirmIcon =
-                          _obscureConfirm ? CupertinoIcons.eye : CupertinoIcons.eye_slash;
-                    });
-                  },
-                  icon: Icon(_obscureConfirmIcon, size: 24),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) return 'Please fill in this field';
-                  if (value != passwordController.text) return 'Passwords do not match!';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 40),
-              Center(
-                child: TextButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await context
-                          .read<AuthCubit>()
-                          .signUp(emailController.text, passwordController.text);
+                const SizedBox(height: 40),
+                ZoninTextField(
+                  controller: emailController,
+                  labelText: 'EMAIL',
+                  obscureText: false,
+                  keyboardType: TextInputType.emailAddress,
+                  suffixIcon: const Icon(CupertinoIcons.mail_solid, size: 24),
+                  validator: (value) {
+                    if (value!.isEmpty) return 'Please fill in this field';
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      return 'Invalid email format';
                     }
+                    return null;
                   },
-                  style: ButtonStyle(
-                    minimumSize: MaterialStatePropertyAll<Size>(
-                        Size(MediaQuery.of(context).size.width * 0.8, 0)),
-                    backgroundColor: const MaterialStatePropertyAll<Color>(accentPurple),
-                    padding: const MaterialStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(vertical: 15)),
-                    splashFactory: InkSplash.splashFactory,
-                    overlayColor: const MaterialStatePropertyAll<Color>(accentPurple2),
-                  ),
-                  child: const Text(
-                    "SIGN UP",
-                    style: TextStyle(
-                      color: Color(0xFF21005D),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
                 ),
-              ),
-              const SizedBox(height: 100),
-            ],
+                const SizedBox(height: 20),
+                ZoninTextField(
+                  controller: passwordController,
+                  labelText: 'PASSWORD',
+                  obscureText: _obscurePassword,
+                  keyboardType: TextInputType.emailAddress,
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                        _obscureIcon =
+                            _obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_slash;
+                      });
+                    },
+                    icon: Icon(_obscureIcon, size: 24),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) return 'Please fill in this field';
+                    if (value.length < 8) return 'Password must be at least 8 characters long';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ZoninTextField(
+                  controller: confirmController,
+                  labelText: 'CONFIRM PASSWORD',
+                  obscureText: _obscureConfirm,
+                  keyboardType: TextInputType.emailAddress,
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirm = !_obscureConfirm;
+                        _obscureConfirmIcon =
+                            _obscureConfirm ? CupertinoIcons.eye : CupertinoIcons.eye_slash;
+                      });
+                    },
+                    icon: Icon(_obscureConfirmIcon, size: 24),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) return 'Please fill in this field';
+                    if (value != passwordController.text) return 'Passwords do not match!';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 40),
+                Center(
+                  child: _isLoading
+                      ? const CircularProgressIndicator()
+                      : TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await context
+                                  .read<AuthCubit>()
+                                  .signUp(emailController.text, passwordController.text);
+                            }
+                          },
+                          style: ButtonStyle(
+                            minimumSize: MaterialStatePropertyAll<Size>(
+                                Size(MediaQuery.of(context).size.width * 0.8, 0)),
+                            backgroundColor: const MaterialStatePropertyAll<Color>(accentPurple),
+                            padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                EdgeInsets.symmetric(vertical: 15)),
+                            splashFactory: InkSplash.splashFactory,
+                            overlayColor: const MaterialStatePropertyAll<Color>(accentPurple2),
+                          ),
+                          child: const Text(
+                            "SIGN UP",
+                            style: TextStyle(
+                              color: Color(0xFF21005D),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 100),
+              ],
+            ),
           ),
         ),
       ),
