@@ -10,3 +10,4 @@ const accentBlue = Color(0xFF83DFF5);
 const accentBlue2 = Color(0xFFB2EBF9);
 const textColour = Color(0xFFE6E0E9);
 const focusText = Color(0xFF36343B);
+const darkAppBar = Color(0xFF211F26);

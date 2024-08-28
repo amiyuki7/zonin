@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zonin/colors.dart';
 import 'package:zonin/components/oauth_button.dart';
 import 'package:zonin/components/zonin_text_field.dart';
+import 'package:zonin/screens/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 25),
             const Text(
-              "or continue with",
+              "or continue with (not available)",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Don't have an account? ",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -141,9 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
-                  child: Text("Sign Up",
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => SignUpScreen()));
+                  },
+                  style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
+                  child: const Text("Sign Up",
                       style: TextStyle(
                         color: accentPurple,
                         fontWeight: FontWeight.bold,
