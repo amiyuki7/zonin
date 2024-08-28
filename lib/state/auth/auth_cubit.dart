@@ -7,7 +7,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final IUserService _userService;
 
-  AuthCubit(this._userService) : super(Loading());
+  AuthCubit(this._userService) : super(AuthInitial());
 
   Future<void> signIn(String email, String password) async {
     emit(Loading());
@@ -31,5 +31,9 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
     emit(Authenticated(result.value!));
+  }
+
+  void signOut() {
+    emit(AuthInitial());
   }
 }
