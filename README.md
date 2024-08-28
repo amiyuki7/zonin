@@ -19,6 +19,11 @@ Copy & run this line to _**SETUP**_ the database. The `setup_rethinkdb.py` scrip
 docker build -t zonin . && docker run -d -p 8080:8080 -p 28015:28015 --name rethink_zonin zonin && docker exec rethink_zonin python3 setup_rethinkdb.py
 ```
 
+Note that for testing purposes, this script will create a default user with the login:
+|email|password|
+|---|---|
+|admin@zonin.dev|admin888|
+
 ## Run
 
 ### With an iOS Simulator configured via Xcode
