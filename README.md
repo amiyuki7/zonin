@@ -1,16 +1,34 @@
 # zonin
 
-A new Flutter project.
+## Requirements
 
-## Getting Started
+- Flutter installed with working simulators (for now, only iOS is guaranteed to work) [[Install Flutter](https://flutter-ko.dev/get-started/install)]
+- Docker [[Install Docker](https://docs.docker.com/engine/install/)]
 
-This project is a starting point for a Flutter application.
+## Setup
 
-A few resources to get you started if this is your first Flutter project:
+### With Docker
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```sh
+# Clone and cd
+git clone https://github.com/amiyuki7/zonin.git && cd zonin
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Copy & run this line to _**SETUP**_ the database. The `setup_rethinkdb.py` script should not be run a second time.
+```sh
+docker build -t zonin . && docker run -d -p 8080:8080 -p 28015:28015 --name rethink_zonin zonin && docker exec rethink_zonin python3 setup_rethinkdb.py
+```
+
+## Run
+
+### With an iOS Simulator configured via Xcode
+
+```sh
+# Start the database if you haven't already
+docker start rethink_zonin
+
+# Alternatively, manually open a Simulator of choice
+open -a Simulator
+
+flutter run
+```
