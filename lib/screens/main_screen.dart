@@ -2,11 +2,10 @@ import 'package:backend/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
-import 'package:rethink_db_ns/rethink_db_ns.dart';
 import 'package:zonin/colors.dart';
 import 'package:zonin/screens/analytics_screen.dart';
 import 'package:zonin/screens/home_screen.dart';
+import 'package:zonin/state/activity/activity_bloc.dart';
 import 'package:zonin/state/auth/auth_cubit.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,6 +18,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentPageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ActivityBloc>().add(ActivityLoad());
+  }
 
   @override
   Widget build(BuildContext context) {

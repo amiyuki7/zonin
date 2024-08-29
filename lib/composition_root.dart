@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rethink_db_ns/rethink_db_ns.dart';
 import 'package:zonin/screens/login_screen.dart';
 import 'package:zonin/screens/main_screen.dart';
+import 'package:zonin/state/activity/activity_bloc.dart';
 import 'package:zonin/state/auth/auth_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zonin/theme.dart';
@@ -11,12 +12,14 @@ class CompositionRoot {
   static late RethinkDb _r;
   static late Connection _conn;
   static late IUserService _userService;
+  static late IActivityService _activityService;
   // static late AuthCubit authCubit;
 
   static Future<void> configure() async {
     _r = RethinkDb();
     _conn = await _r.connect(host: '127.0.0.1', port: 28015);
     _userService = UserService(_r, _conn);
+    _activityService = ActivityService(_r, _conn);
     // authCubit = AuthCubit(_userService);
   }
 
@@ -45,7 +48,16 @@ class Composer extends StatelessWidget {
         home: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             return (state is Authenticated)
-                ? MainScreen(state.user)
+                ? MultiBlocProvider(
+                    providers: [
+                      BlocProvider<ActivityBloc>(
+                        create: (context) =>
+                            ActivityBloc(CompositionRoot._activityService, state.user.id!),
+                      ),
+                    ],
+                    child: MainScreen(state.user),
+                  )
+                // MainScreen(state.user)
                 : CompositionRoot.composeLoginUI();
           },
         ),
