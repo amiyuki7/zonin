@@ -91,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: passwordController,
                   labelText: 'PASSWORD',
                   obscureText: _obscurePassword,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.visiblePassword,
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -113,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: confirmController,
                   labelText: 'CONFIRM PASSWORD',
                   obscureText: _obscureConfirm,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.visiblePassword,
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {

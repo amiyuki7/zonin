@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: passwordController,
                           labelText: 'PASSWORD',
                           obscureText: _obscurePassword,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.visiblePassword,
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -196,9 +196,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => BlocProvider.value(
-                            value: BlocProvider.of<AuthCubit>(context),
-                            child: const SignUpScreen(),
-                          ),
+                              value: BlocProvider.of<AuthCubit>(context),
+                              child: Scaffold(
+                                body: SingleChildScrollView(
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height,
+                                    child: const SignUpScreen(),
+                                  ),
+                                ),
+                              )),
                         ),
                       );
                     },

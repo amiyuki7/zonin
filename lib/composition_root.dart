@@ -23,14 +23,21 @@ class CompositionRoot {
     // authCubit = AuthCubit(_userService);
   }
 
-  static Widget composeLoginUI() {
+  static Widget composeLoginUI(BuildContext context) {
     // return MultiBlocProvider(
     //   providers: [
     //     BlocProvider(create: (BuildContext context) => authCubit),
     //   ],
     //   child: const LoginScreen(),
     // );
-    return const LoginScreen();
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: const LoginScreen(),
+        ),
+      ),
+    );
   }
 }
 
@@ -58,7 +65,7 @@ class Composer extends StatelessWidget {
                     child: MainScreen(state.user),
                   )
                 // MainScreen(state.user)
-                : CompositionRoot.composeLoginUI();
+                : CompositionRoot.composeLoginUI(context);
           },
         ),
       ),
