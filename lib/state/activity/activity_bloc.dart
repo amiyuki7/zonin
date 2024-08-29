@@ -18,5 +18,17 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       loaded = true;
       emit(ActivityLoadSuccess());
     });
+
+    on<ActivityCreate>((event, emit) async {
+      final result = await _activityService.create(userId, event.name, event.description);
+      if (result.error != null) {
+        // Creation error - that activity already exists!
+        emit(ActivityCreateFail(result.error!));
+      } else {
+        emit(ActivityCreateSuccess(result.value!));
+        activities.add(result.value!);
+      }
+      emit(ActivityInitial());
+    });
   }
 }

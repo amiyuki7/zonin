@@ -8,3 +8,13 @@ sealed class ActivityEvent extends Equatable {
 }
 
 final class ActivityLoad extends ActivityEvent {}
+
+final class ActivityCreate extends ActivityEvent {
+  final String name;
+  final String description;
+
+  const ActivityCreate(this.name, this.description);
+
+  @override
+  List<Object> get props => [name, description];
+}
