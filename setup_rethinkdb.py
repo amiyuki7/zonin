@@ -1,5 +1,8 @@
 import hashlib
+from time import sleep
 from rethinkdb import r
+
+sleep(5)
 
 conn = r.connect(db='test')
 
