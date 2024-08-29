@@ -1,5 +1,6 @@
 import 'package:backend/backend.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rethink_db_ns/rethink_db_ns.dart';
 import 'package:zonin/screens/login_screen.dart';
 import 'package:zonin/screens/main_screen.dart';
@@ -46,6 +47,11 @@ class Composer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Not allow landscape mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return RepositoryProvider<AuthCubit>(
       create: (context) => AuthCubit(CompositionRoot._userService),
       child: MaterialApp(
